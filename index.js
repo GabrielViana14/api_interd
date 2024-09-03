@@ -1,6 +1,7 @@
 const express = require('express');
 const mysql = require('mysql2');
 const bodyParser = require('body-parser'); //converte para JSON ou vice versa
+require('dotenv').config();
 
 const app = express();
 const port = 3000;
@@ -8,9 +9,9 @@ const port = 3000;
 // Configuração do MySQL
 const connection = mysql.createConnection({
   host: 'localhost',
-  user: 'root', // Seu nome de usuário do MySQL
-  password: 'mysql@123', // Sua senha do MySQL
-  database: 'usersdb'
+  user: process.env.MYSQL_USER, // Usa variáveis de ambiente
+  password: process.env.MYSQL_PASSWORD,
+  database: process.env.MYSQL_DATABASE
 });
 
 // Conectar ao banco de dados
@@ -64,6 +65,9 @@ app.put('/users/:id', (req, res) => {
 });
 
 // Iniciar o servidor
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`Servidor rodando na porta ${port}`);
 });
+
+
+module.exports = {app,server};
