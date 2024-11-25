@@ -1,3 +1,10 @@
+require('dotenv').config();
+
+console.log('root:', process.env.MYSQL_USER);
+console.log('senha@123:', process.env.MYSQL_PASSWORD);
+console.log('fornecedoresdb:', process.env.MYSQL_DATABASE);
+
+
 const express = require('express');
 const mysql = require('mysql2');
 const bodyParser = require('body-parser'); //converte para JSON ou vice versa
@@ -6,9 +13,10 @@ require('dotenv').config();
 const app = express();
 const port = 3000;
 
+
 // Configuração do MySQL
 const connection = mysql.createConnection({
-  host: 'localhost',
+  host: '172.17.0.1',
   user: process.env.MYSQL_USER, // Usa variáveis de ambiente
   password: process.env.MYSQL_PASSWORD,
   database: process.env.MYSQL_DATABASE
@@ -25,42 +33,140 @@ app.use(bodyParser.json());
 
 // Rotas CRUD
 
-// Criar usuário
-app.post('/users', (req, res) => {
-  const { name, email } = req.body;
-  const INSERT_USER_QUERY = `INSERT INTO users (name, email) VALUES (?, ?)`;
-  connection.query(INSERT_USER_QUERY, [name, email], (err, results) => {
-    if (err) throw err;
-    res.send('Usuário criado com sucesso');
-  });
+// Criar fornecedor
+app.post('/fornecedores', (req, res) => {
+  const {
+    NomeFornecedor,
+    CnpjFornecedor,
+    IEFornecedor,
+    EnderecoFornecedor,
+    CepFornecedor,
+    NrEndFornecedor,
+    PaisFornecedor,
+    EstadoFornecedor,
+    EmailFornecedor,
+    txtTelFornecedor,
+    txtOutrosFornecedor
+  } = req.body;
+
+  const INSERT_FORNECEDOR_QUERY = `
+    INSERT INTO fornecedores (
+      NomeFornecedor, 
+      CnpjFornecedor, 
+      IEFornecedor, 
+      EnderecoFornecedor, 
+      CepFornecedor, 
+      NrEndFornecedor, 
+      PaisFornecedor, 
+      EstadoFornecedor, 
+      EmailFornecedor, 
+      txtTelFornecedor, 
+      txtOutrosFornecedor
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+
+  connection.query(
+    INSERT_FORNECEDOR_QUERY,
+    [
+      NomeFornecedor,
+      CnpjFornecedor,
+      IEFornecedor,
+      EnderecoFornecedor,
+      CepFornecedor,
+      NrEndFornecedor,
+      PaisFornecedor,
+      EstadoFornecedor,
+      EmailFornecedor,
+      txtTelFornecedor,
+      txtOutrosFornecedor
+    ],
+    (err, results) => {
+      if (err) throw err;
+      res.send('Fornecedor criado com sucesso');
+    }
+  );
 });
 
-// Obter todos os usuários
-app.get('/users', (req, res) => {
-  connection.query('SELECT * FROM users', (err, results) => {
+// Obter todos os fornecedores
+app.get('/fornecedores', (req, res) => {
+  connection.query('SELECT * FROM fornecedores', (err, results) => {
     if (err) throw err;
     res.json(results);
   });
 });
 
-// Obter um usuário por ID
-app.get('/users/:id', (req, res) => {
-  const userId = req.params.id;
-  const SELECT_USER_QUERY = `SELECT * FROM users WHERE id = ?`;
-  connection.query(SELECT_USER_QUERY, [userId], (err, results) => {
+// Obter um fornecedor por ID
+app.get('/fornecedores/:id', (req, res) => {
+  const fornecedorId = req.params.id;
+  const SELECT_FORNECEDOR_QUERY = `SELECT * FROM fornecedores WHERE id_fornecedor = ?`;
+  connection.query(SELECT_FORNECEDOR_QUERY, [fornecedorId], (err, results) => {
     if (err) throw err;
     res.json(results);
   });
 });
 
-// Atualizar usuario ja existente
-app.put('/users/:id', (req, res) => {
-  const userId = req.params.id;
-  const { name, email } = req.body;
-  const UPDATE_USER_QUERY = `UPDATE users SET name = ?, email = ? WHERE id = ?`;
-  connection.query(UPDATE_USER_QUERY, [name, email, userId], (err, results) => {
+// Atualizar fornecedor já existente
+app.put('/fornecedores/:id', (req, res) => {
+  const fornecedorId = req.params.id;
+  const {
+    NomeFornecedor,
+    CnpjFornecedor,
+    IEFornecedor,
+    EnderecoFornecedor,
+    CepFornecedor,
+    NrEndFornecedor,
+    PaisFornecedor,
+    EstadoFornecedor,
+    EmailFornecedor,
+    txtTelFornecedor,
+    txtOutrosFornecedor
+  } = req.body;
+
+  const UPDATE_FORNECEDOR_QUERY = `
+    UPDATE fornecedores 
+    SET 
+      NomeFornecedor = ?, 
+      CnpjFornecedor = ?, 
+      IEFornecedor = ?, 
+      EnderecoFornecedor = ?, 
+      CepFornecedor = ?, 
+      NrEndFornecedor = ?, 
+      PaisFornecedor = ?, 
+      EstadoFornecedor = ?, 
+      EmailFornecedor = ?, 
+      txtTelFornecedor = ?, 
+      txtOutrosFornecedor = ? 
+    WHERE id_fornecedor = ?`;
+
+  connection.query(
+    UPDATE_FORNECEDOR_QUERY,
+    [
+      NomeFornecedor,
+      CnpjFornecedor,
+      IEFornecedor,
+      EnderecoFornecedor,
+      CepFornecedor,
+      NrEndFornecedor,
+      PaisFornecedor,
+      EstadoFornecedor,
+      EmailFornecedor,
+      txtTelFornecedor,
+      txtOutrosFornecedor,
+      fornecedorId
+    ],
+    (err, results) => {
+      if (err) throw err;
+      res.send('Fornecedor atualizado com sucesso');
+    }
+  );
+});
+
+// Deletar fornecedor
+app.delete('/fornecedores/:id', (req, res) => {
+  const fornecedorId = req.params.id;
+  const DELETE_FORNECEDOR_QUERY = `DELETE FROM fornecedores WHERE id_fornecedor = ?`;
+  connection.query(DELETE_FORNECEDOR_QUERY, [fornecedorId], (err, results) => {
     if (err) throw err;
-    res.send('Usuário atualizado com sucesso');
+    res.send('Fornecedor deletado com sucesso');
   });
 });
 
