@@ -1,12 +1,8 @@
 const mysql = require('mysql2/promise');
 require('dotenv').config();
 
-const connection = await mysql.createConnection({
-  host: '172.17.0.1',
-  user: 'root',
-  password: 'senha@123',
-  database: 'fornecedoresdb',
-});
+console.log('Tentando conectar ao banco...');
+console.log('Tentando criar tabelas...');
 
 (async () => {
   try {
@@ -18,32 +14,30 @@ const connection = await mysql.createConnection({
   }
 })();
 
-
 async function createDatabase() {
   try {
     const connection = await mysql.createConnection({
-      host: '172.17.0.1', // Use o nome do host do seu contêiner MySQL
-      user:  process.env.MYSQL_USER, // Seu nome de usuário do MySQL
-      password: process.env.MYSQL_PASSWORD,
-
+      host: '172.17.0.1', // Nome do host do seu contêiner MySQL
+      user: process.env.MYSQL_USER, // Usuário do MySQL
+      password: process.env.MYSQL_PASSWORD, // Senha do MySQL
     });
 
-    await connection.query(`CREATE DATABASE IF NOT EXISTS ${process.env.MYSQL_DATABASE}`);
-    console.log('Banco de dados criado com sucesso.');
-
-    connection.close();
+    await connection.query(`CREATE DATABASE IF NOT EXISTS \`${process.env.MYSQL_DATABASE}\`;`);
+    console.log(`Banco de dados "${process.env.MYSQL_DATABASE}" criado com sucesso.`);
+    await connection.end(); // Fecha a conexão
   } catch (error) {
     console.error('Erro ao criar o banco de dados:', error);
+    throw error;
   }
 }
 
 async function createTables() {
   try {
     const connection = await mysql.createConnection({
-      host: '172.17.0.1', // Use o nome do host do seu contêiner MySQL
-      user: process.env.MYSQL_USER, // Seu nome de usuário do MySQL
-      password: process.env.MYSQL_PASSWORD,
-      database: process.env.MYSQL_DATABASE,
+      host: '172.17.0.1', // Nome do host do seu contêiner MySQL
+      user: process.env.MYSQL_USER, // Usuário do MySQL
+      password: process.env.MYSQL_PASSWORD, // Senha do MySQL
+      database: process.env.MYSQL_DATABASE, // Nome do banco de dados
     });
 
     await connection.query(`
@@ -64,18 +58,9 @@ async function createTables() {
     `);
 
     console.log('Tabela "fornecedores" criada com sucesso.');
-
-    connection.close();
+    await connection.end(); // Fecha a conexão
   } catch (error) {
     console.error('Erro ao criar tabelas:', error);
+    throw error;
   }
 }
-
-console.log('Tentando criar tabelas...');
-console.log('Tentando conectar ao banco...');
-
-
-// Chame as funções na ordem desejada
-createDatabase()
-  .then(() => createTables())
-  .catch((error) => console.error('Erro geral:', error));

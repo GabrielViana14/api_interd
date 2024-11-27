@@ -4,11 +4,9 @@ console.log('root:', process.env.MYSQL_USER);
 console.log('senha@123:', process.env.MYSQL_PASSWORD);
 console.log('fornecedoresdb:', process.env.MYSQL_DATABASE);
 
-
 const express = require('express');
 const mysql = require('mysql2');
-const bodyParser = require('body-parser'); //converte para JSON ou vice versa
-require('dotenv').config();
+const bodyParser = require('body-parser'); // converte para JSON ou vice-versa
 
 const app = express();
 const port = 3000;
@@ -17,9 +15,9 @@ const port = 3000;
 // Configuração do MySQL
 const connection = mysql.createConnection({
   host: '172.17.0.1',
-  user: process.env.MYSQL_USER, // Usa variáveis de ambiente
+  user: process.env.MYSQL_USER,
   password: process.env.MYSQL_PASSWORD,
-  database: process.env.MYSQL_DATABASE
+  database: process.env.MYSQL_DATABASE,
 });
 
 // Conectar ao banco de dados
@@ -28,12 +26,17 @@ connection.connect((err) => {
   console.log('Conectado ao banco de dados MySQL');
 });
 
+
 // Middleware para analisar corpos de solicitação
 app.use(bodyParser.json());
 
-// Rotas CRUD
+connection.query(`CREATE DATABASE IF NOT EXISTS ${process.env.MYSQL_DATABASE}`, (err) => {
+  if (err) throw err;
+  console.log(`Banco de dados '${process.env.MYSQL_DATABASE}' criado/verificado.`);
+});
 
-// Criar fornecedor
+
+// Rotas CRUD (exemplo: criar fornecedor)
 app.post('/fornecedores', (req, res) => {
   const {
     NomeFornecedor,
@@ -46,10 +49,10 @@ app.post('/fornecedores', (req, res) => {
     EstadoFornecedor,
     EmailFornecedor,
     txtTelFornecedor,
-    txtOutrosFornecedor
+    txtOutrosFornecedor,
   } = req.body;
 
-  const INSERT_FORNECEDOR_QUERY = `
+  const query = `
     INSERT INTO fornecedores (
       NomeFornecedor, 
       CnpjFornecedor, 
@@ -65,7 +68,7 @@ app.post('/fornecedores', (req, res) => {
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
   connection.query(
-    INSERT_FORNECEDOR_QUERY,
+    query,
     [
       NomeFornecedor,
       CnpjFornecedor,
@@ -77,11 +80,15 @@ app.post('/fornecedores', (req, res) => {
       EstadoFornecedor,
       EmailFornecedor,
       txtTelFornecedor,
-      txtOutrosFornecedor
+      txtOutrosFornecedor,
     ],
     (err, results) => {
-      if (err) throw err;
-      res.send('Fornecedor criado com sucesso');
+      if (err) {
+        console.error('Erro ao criar fornecedor:', err);
+        res.status(500).send('Erro ao criar fornecedor');
+      } else {
+        res.status(201).send('Fornecedor criado com sucesso');
+      }
     }
   );
 });
@@ -170,10 +177,11 @@ app.delete('/fornecedores/:id', (req, res) => {
   });
 });
 
+
 // Iniciar o servidor
 const server = app.listen(port, () => {
   console.log(`Servidor rodando na porta ${port}`);
 });
 
-
-module.exports = {app,server,connection};
+// Exportar variáveis
+module.exports = { app, server, connection };
