@@ -52,8 +52,8 @@ async function createTables() {
           PaisFornecedor VARCHAR(100),
           EstadoFornecedor VARCHAR(100),
           EmailFornecedor VARCHAR(255),
-          txtTelFornecedor VARCHAR(20),
-          txtOutrosFornecedor VARCHAR(255)
+          TelFornecedor VARCHAR(20),
+          OutrosFornecedor VARCHAR(255)
       );
     `);
 

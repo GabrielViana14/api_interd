@@ -48,8 +48,8 @@ app.post('/fornecedores', (req, res) => {
     PaisFornecedor,
     EstadoFornecedor,
     EmailFornecedor,
-    txtTelFornecedor,
-    txtOutrosFornecedor,
+    TelFornecedor,
+    OutrosFornecedor,
   } = req.body;
 
   const query = `
@@ -63,8 +63,8 @@ app.post('/fornecedores', (req, res) => {
       PaisFornecedor, 
       EstadoFornecedor, 
       EmailFornecedor, 
-      txtTelFornecedor, 
-      txtOutrosFornecedor
+      TelFornecedor, 
+      OutrosFornecedor
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
   connection.query(
@@ -79,8 +79,8 @@ app.post('/fornecedores', (req, res) => {
       PaisFornecedor,
       EstadoFornecedor,
       EmailFornecedor,
-      txtTelFornecedor,
-      txtOutrosFornecedor,
+      TelFornecedor,
+      OutrosFornecedor,
     ],
     (err, results) => {
       if (err) {
@@ -124,8 +124,8 @@ app.put('/fornecedores/:id', (req, res) => {
     PaisFornecedor,
     EstadoFornecedor,
     EmailFornecedor,
-    txtTelFornecedor,
-    txtOutrosFornecedor
+    TelFornecedor,
+    OutrosFornecedor
   } = req.body;
 
   const UPDATE_FORNECEDOR_QUERY = `
@@ -140,8 +140,8 @@ app.put('/fornecedores/:id', (req, res) => {
       PaisFornecedor = ?, 
       EstadoFornecedor = ?, 
       EmailFornecedor = ?, 
-      txtTelFornecedor = ?, 
-      txtOutrosFornecedor = ? 
+      TelFornecedor = ?, 
+      OutrosFornecedor = ? 
     WHERE id_fornecedor = ?`;
 
   connection.query(
@@ -156,8 +156,8 @@ app.put('/fornecedores/:id', (req, res) => {
       PaisFornecedor,
       EstadoFornecedor,
       EmailFornecedor,
-      txtTelFornecedor,
-      txtOutrosFornecedor,
+      TelFornecedor,
+      OutrosFornecedor,
       fornecedorId
     ],
     (err, results) => {

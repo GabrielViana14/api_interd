@@ -13,6 +13,6 @@ CREATE TABLE fornecedores (
     PaisFornecedor VARCHAR(100),
     EstadoFornecedor VARCHAR(100),
     EmailFornecedor VARCHAR(255),
-    txtTelFornecedor VARCHAR(20), -- Tamanho ajustado para número de telefone
-    txtOutrosFornecedor VARCHAR(255)
+    TelFornecedor VARCHAR(20), -- Tamanho ajustado para número de telefone
+    OutrosFornecedor VARCHAR(255)
 );
