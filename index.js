@@ -35,6 +35,29 @@ connection.query(`CREATE DATABASE IF NOT EXISTS ${process.env.MYSQL_DATABASE}`, 
   console.log(`Banco de dados '${process.env.MYSQL_DATABASE}' criado/verificado.`);
 });
 
+const CREATE_TABLE_QUERY = `
+  CREATE TABLE IF NOT EXISTS fornecedores (
+    id_fornecedor INT AUTO_INCREMENT PRIMARY KEY,
+    NomeFornecedor VARCHAR(255) NOT NULL,
+    CnpjFornecedor VARCHAR(18) NOT NULL,
+    IEFornecedor VARCHAR(18) NOT NULL,
+    EnderecoFornecedor VARCHAR(255) NOT NULL,
+    CepFornecedor VARCHAR(9) NOT NULL,
+    NrEndFornecedor VARCHAR(10) NOT NULL,
+    PaisFornecedor VARCHAR(100) NOT NULL,
+    EstadoFornecedor VARCHAR(100) NOT NULL,
+    EmailFornecedor VARCHAR(100) NOT NULL,
+    TelFornecedor VARCHAR(15) NOT NULL,
+    OutrosFornecedor TEXT NOT NULL
+  );
+`;
+
+
+connection.query(CREATE_TABLE_QUERY, (err) => {
+  if (err) throw err;
+  console.log("Tabela 'fornecedores' criada/verificada.");
+});
+
 
 // Rotas CRUD (exemplo: criar fornecedor)
 app.post('/fornecedores', (req, res) => {

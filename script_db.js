@@ -40,23 +40,24 @@ async function createTables() {
       database: process.env.MYSQL_DATABASE, // Nome do banco de dados
     });
 
-    await connection.query(`
+    const CREATE_TABLE_QUERY = `
       CREATE TABLE IF NOT EXISTS fornecedores (
-          id_fornecedor INT AUTO_INCREMENT PRIMARY KEY,
-          NomeFornecedor VARCHAR(255),
-          CnpjFornecedor VARCHAR(18),
-          IEFornecedor VARCHAR(50),
-          EnderecoFornecedor VARCHAR(255),
-          CepFornecedor VARCHAR(10),
-          NrEndFornecedor VARCHAR(10),
-          PaisFornecedor VARCHAR(100),
-          EstadoFornecedor VARCHAR(100),
-          EmailFornecedor VARCHAR(255),
-          TelFornecedor VARCHAR(20),
-          OutrosFornecedor VARCHAR(255)
+        id_fornecedor INT AUTO_INCREMENT PRIMARY KEY,
+        NomeFornecedor VARCHAR(255) NOT NULL,
+        CnpjFornecedor VARCHAR(18) NOT NULL,
+        IEFornecedor VARCHAR(18) NOT NULL,
+        EnderecoFornecedor VARCHAR(255) NOT NULL,
+        CepFornecedor VARCHAR(9) NOT NULL,
+        NrEndFornecedor VARCHAR(10) NOT NULL,
+        PaisFornecedor VARCHAR(100) NOT NULL,
+        EstadoFornecedor VARCHAR(100) NOT NULL,
+        EmailFornecedor VARCHAR(100) NOT NULL,
+        TelFornecedor VARCHAR(15) NOT NULL,
+        OutrosFornecedor TEXT NOT NULL
       );
-    `);
+    `;
 
+    await connection.query(CREATE_TABLE_QUERY);
     console.log('Tabela "fornecedores" criada com sucesso.');
     await connection.end(); // Fecha a conexão
   } catch (error) {
