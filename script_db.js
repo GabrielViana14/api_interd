@@ -53,7 +53,7 @@ async function createTables() {
         EstadoFornecedor VARCHAR(100) NOT NULL,
         EmailFornecedor VARCHAR(100) NOT NULL,
         TelFornecedor VARCHAR(15) NOT NULL,
-        OutrosFornecedor TEXT NOT NULL
+        OutrosFornecedor VARCHAR(255) NOT NULL
       );
     `;
 

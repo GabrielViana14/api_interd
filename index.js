@@ -8,6 +8,7 @@ const express = require('express');
 const mysql = require('mysql2');
 const bodyParser = require('body-parser'); // converte para JSON ou vice-versa
 
+
 const app = express();
 const port = 3000;
 
@@ -29,6 +30,8 @@ connection.connect((err) => {
 
 // Middleware para analisar corpos de solicitação
 app.use(bodyParser.json());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 connection.query(`CREATE DATABASE IF NOT EXISTS ${process.env.MYSQL_DATABASE}`, (err) => {
   if (err) throw err;
@@ -48,7 +51,7 @@ const CREATE_TABLE_QUERY = `
     EstadoFornecedor VARCHAR(100) NOT NULL,
     EmailFornecedor VARCHAR(100) NOT NULL,
     TelFornecedor VARCHAR(15) NOT NULL,
-    OutrosFornecedor TEXT NOT NULL
+    OutrosFornecedor VARCHAR (255) NOT NULL
   );
 `;
 
@@ -61,6 +64,7 @@ connection.query(CREATE_TABLE_QUERY, (err) => {
 
 // Rotas CRUD (exemplo: criar fornecedor)
 app.post('/fornecedores', (req, res) => {
+  console.log('Dados recebidos:', req.body); // Verifique o que está chegando da requisição
   const {
     NomeFornecedor,
     CnpjFornecedor,
@@ -199,7 +203,6 @@ app.delete('/fornecedores/:id', (req, res) => {
     res.send('Fornecedor deletado com sucesso');
   });
 });
-
 
 // Iniciar o servidor
 const server = app.listen(port, () => {
